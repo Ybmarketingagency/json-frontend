@@ -21,6 +21,10 @@ const MirrorSummary: React.FC<MirrorSummaryProps> = ({
   onAddToCart,
   disableAddToCart
 }) => {
+  const basePrice = Number(calculatePrice());
+  const deliveryCost = options.delivery === 'delivery' ? 20 : 0;
+  const totalPrice = basePrice + deliveryCost;
+
   return (
     <div className="space-y-6">
       <div className="bg-gray-50 p-6 rounded-xl">
@@ -58,17 +62,25 @@ const MirrorSummary: React.FC<MirrorSummaryProps> = ({
           </div>
         </div>
 
-        <div className="flex justify-between mb-6">
-          <span className="text-gray-700">Prijs:</span>
-          <div className="text-right">
-            <span className="text-xl font-bold text-black">
-              €{(Number(calculatePrice()) * options.quantity).toFixed(2)}
-            </span>
-            {options.quantity > 1 && (
-              <span className="block text-sm text-gray-500">
-                (€{calculatePrice()} per stuk)
-              </span>
-            )}
+        <div className="space-y-2 border-t pt-4 mb-6">
+          <div className="flex justify-between">
+            <span className="text-gray-600">Prijs per stuk:</span>
+            <span className="font-medium">€{basePrice.toFixed(2)}</span>
+          </div>
+          <div className="flex justify-between">
+            <span className="text-gray-600">Bezorgkosten:</span>
+            <span className="font-medium">€{deliveryCost.toFixed(2)}</span>
+          </div>
+          <div className="flex justify-between text-lg font-semibold pt-2 border-t">
+            <span>Totaal (incl. BTW):</span>
+            <div className="text-right">
+              <span className="block">€{(totalPrice * options.quantity).toFixed(2)}</span>
+              {options.quantity > 1 && (
+                <span className="block text-sm text-gray-500">
+                  (€{totalPrice.toFixed(2)} per stuk)
+                </span>
+              )}
+            </div>
           </div>
         </div>
         
