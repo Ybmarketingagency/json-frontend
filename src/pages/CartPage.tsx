@@ -5,6 +5,8 @@ import { useCart } from '../context/CartContext';
 
 const CartPage: React.FC = () => {
   const { cart, removeFromCart, updateQuantity, cartTotal } = useCart();
+  const deliveryCost = 20;
+  const finalTotal = cartTotal + deliveryCost;
 
   if (cart.length === 0) {
     return (
@@ -21,7 +23,7 @@ const CartPage: React.FC = () => {
             </p>
             <Link 
               to="/spiegels" 
-              className="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors"
+              className="inline-block bg-black text-white px-6 py-3 rounded-lg hover:bg-gray-900 transition-colors"
             >
               Bekijk spiegels
             </Link>
@@ -58,7 +60,7 @@ const CartPage: React.FC = () => {
                   <div className="flex-1">
                     <h3 className="font-semibold text-gray-900">{item.shape.name}</h3>
                     <p className="text-gray-500 text-sm">
-                      Afmetingen: {item.width} × {item.height} cm
+                      Afmetingen: {item.width} × {item.height} mm
                     </p>
                   </div>
                   
@@ -118,38 +120,29 @@ const CartPage: React.FC = () => {
               <div className="space-y-4 mb-6">
                 <div className="flex justify-between">
                   <span className="text-gray-600">Subtotaal</span>
-                  <span className="font-semibold">€{cartTotal.toFixed(2)}</span>
+                  <span className="font-medium">€{cartTotal.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Verzendkosten</span>
-                  <span className="font-semibold">
-                    {cartTotal > 50 ? 'Gratis' : '€4.95'}
-                  </span>
+                  <span className="text-gray-600">Bezorgkosten</span>
+                  <span className="font-medium">€{deliveryCost.toFixed(2)}</span>
                 </div>
                 
                 <div className="border-t pt-4">
-                  <div className="flex justify-between">
-                    <span className="text-gray-900 font-semibold">Totaal (incl. BTW)</span>
-                    <span className="font-bold text-lg">
-                      €{(cartTotal > 50 ? cartTotal : cartTotal + 4.95).toFixed(2)}
-                    </span>
+                  <div className="flex justify-between text-lg font-semibold">
+                    <span>Totaal (incl. BTW)</span>
+                    <span>€{finalTotal.toFixed(2)}</span>
                   </div>
                 </div>
               </div>
               
               <Link 
                 to="/checkout"
-                className="w-full bg-blue-600 text-white py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors flex items-center justify-center"
+                className="w-full bg-black text-white py-3 rounded-lg font-medium hover:bg-gray-900 transition-colors flex items-center justify-center"
               >
                 Doorgaan naar betalen <ArrowRight size={16} className="ml-2" />
               </Link>
               
               <div className="mt-6 text-center text-gray-500 text-sm">
-                {cartTotal < 50 && (
-                  <p className="text-blue-600 mb-2">
-                    Nog €{(50 - cartTotal).toFixed(2)} voor gratis verzending!
-                  </p>
-                )}
                 <p>Veilig betalen met iDEAL, Bancontact, of creditcard</p>
               </div>
             </div>

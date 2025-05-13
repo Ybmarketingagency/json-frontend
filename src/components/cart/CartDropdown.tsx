@@ -9,6 +9,8 @@ interface CartDropdownProps {
 
 const CartDropdown: React.FC<CartDropdownProps> = ({ onClose }) => {
   const { cart, removeFromCart, cartTotal } = useCart();
+  const deliveryCost = 20;
+  const finalTotal = cartTotal + deliveryCost;
 
   return (
     <>
@@ -83,9 +85,19 @@ const CartDropdown: React.FC<CartDropdownProps> = ({ onClose }) => {
               ))}
             </div>
             <div className="p-4 border-t bg-white">
-              <div className="flex justify-between items-center mb-4">
-                <span className="font-medium">Prijs:</span>
-                <span className="font-semibold">€{cartTotal.toFixed(2)}</span>
+              <div className="space-y-2 mb-4">
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Subtotaal:</span>
+                  <span className="font-medium">€{cartTotal.toFixed(2)}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Bezorgkosten:</span>
+                  <span className="font-medium">€{deliveryCost.toFixed(2)}</span>
+                </div>
+                <div className="flex justify-between text-lg font-semibold pt-2 border-t">
+                  <span>Totaal (incl. BTW):</span>
+                  <span>€{finalTotal.toFixed(2)}</span>
+                </div>
               </div>
               <Link 
                 to="/checkout" 
