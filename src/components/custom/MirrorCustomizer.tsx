@@ -187,11 +187,6 @@ const MirrorCustomizer: React.FC = () => {
       finalPrice += 50;
     }
     
-    // Add delivery cost if selected
-    if (options.delivery === 'delivery') {
-      finalPrice += 20;
-    }
-    
     return finalPrice.toFixed(2);
   };
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Check, PenTool as Tools, Truck, Shield, Package } from 'lucide-react';
+import { Check, PenTool as Tools } from 'lucide-react';
 import { MirrorDimensions, MirrorOptions as MirrorOptionsType } from '../../types';
 
 interface MirrorSummaryProps {
@@ -23,7 +23,7 @@ const MirrorSummary: React.FC<MirrorSummaryProps> = ({
 }) => {
   const basePrice = Number(calculatePrice());
   const deliveryCost = options.delivery === 'delivery' ? 20 : 0;
-  const totalPrice = basePrice + deliveryCost;
+  const totalPrice = basePrice + (options.delivery === 'delivery' ? deliveryCost : 0);
 
   return (
     <div className="space-y-6">
@@ -108,49 +108,6 @@ const MirrorSummary: React.FC<MirrorSummaryProps> = ({
             'In winkelwagen'
           )}
         </button>
-      </div>
-
-      {/* Mobile specs */}
-      <div style={{ backgroundColor: '#f0ece5' }} className="lg:hidden rounded-xl p-6 space-y-8">
-        <div>
-          <h3 className="font-semibold text-gray-800 mb-3">Productspecificaties</h3>
-          <ul className="space-y-2 text-gray-600 text-sm">
-            <li>• Minder dan 0,1% lood</li>
-            <li>• Geen koper en geen formaldehyde</li>
-            <li>• 70% minder oplosmiddelen t.o.v. MNGE</li>
-            <li>• 10x beter tegen corrosie bestand dan de norm EN 1036</li>
-            <li>• 3x krasbestendiger dan traditionele spiegels</li>
-            <li>• 2x meer compatibele kleefproducten</li>
-            <li>• Bestand tegen chemische reacties op schoonmaakproducten</li>
-          </ul>
-        </div>
-
-        <div>
-          <h3 className="font-semibold text-gray-800 text-lg mb-6">Levering & garantie</h3>
-          <div className="space-y-4">
-            <div className="flex items-start gap-3">
-              <Truck className="w-6 h-6 text-black flex-shrink-0 mt-1" />
-              <div>
-                <p className="font-medium text-gray-800">Bezorging binnen 3 dagen</p>
-                <p className="text-sm text-gray-600">Binnen Nederland.</p>
-              </div>
-            </div>
-            <div className="flex items-start gap-3">
-              <Shield className="w-6 h-6 text-black flex-shrink-0 mt-1" />
-              <div>
-                <p className="font-medium text-gray-800">3 jaar garantie</p>
-                <p className="text-sm text-gray-600">Op fabricage- en materiaalfouten.</p>
-              </div>
-            </div>
-            <div className="flex items-start gap-3">
-              <Package className="w-6 h-6 text-black flex-shrink-0 mt-1" />
-              <div>
-                <p className="font-medium text-gray-800">Zorgvuldig verpakt</p>
-                <p className="text-sm text-gray-600">Uw spiegel wordt speciaal verpakt om transportschade te voorkomen.</p>
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   );
