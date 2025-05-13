@@ -38,14 +38,9 @@ const ShapeSelector: React.FC = () => {
               </div>
               <div className="mt-4">
                 <h3 className="text-gray-900 font-medium text-lg min-h-[3.5rem]">{shape.name}</h3>
-                <div className="space-y-1">
-                  <p className="text-gray-500 text-sm">
-                    vanaf €{shape.startingPrice.toFixed(2)}
-                  </p>
-                  <p className="text-gray-500 text-sm">
-                    + €20.00 bezorgkosten
-                  </p>
-                </div>
+                <p className="text-gray-500 text-sm">
+                  vanaf €{shape.startingPrice.toFixed(2)}
+                </p>
                 <div className="mt-4 flex items-center justify-between">
                   <span className="text-black font-medium group-hover:underline transition-colors flex items-center gap-1">
                     Configureer <ChevronRight size={16} />
