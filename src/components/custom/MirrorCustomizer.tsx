@@ -158,6 +158,9 @@ const MirrorCustomizer: React.FC = () => {
     
     let finalPrice = area * colorPrices[options.color];
 
+    // Apply minimum price of €10
+    finalPrice = Math.max(finalPrice, 10);
+
     // Add complexity factors
     if (shape.slug === 'rond') {
       finalPrice *= 1.25; // 25% extra for round complexity
