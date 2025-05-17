@@ -15,21 +15,23 @@ const CheckoutPage: React.FC = () => {
   const handleShippingSubmit = async (data: any) => {
     try {
       // Create customer record
+      const customerData = {
+        first_name: data.firstName,
+        last_name: data.lastName,
+        email: data.email,
+        company: data.company || null,
+        country: data.country,
+        street: data.street,
+        house_number: data.houseNumber,
+        postal_code: data.postalCode,
+        city: data.city,
+        phone: data.phone
+      };
+
       const { data: customer, error: customerError } = await supabase
         .from('customers')
-        .insert({
-          first_name: data.firstName,
-          last_name: data.lastName,
-          email: data.email,
-          company: data.company || null,
-          country: data.country,
-          street: data.street,
-          house_number: data.houseNumber,
-          postal_code: data.postalCode,
-          city: data.city,
-          phone: data.phone
-        })
-        .select('*')
+        .insert([customerData])
+        .select()
         .single();
 
       if (customerError) {
@@ -42,15 +44,17 @@ const CheckoutPage: React.FC = () => {
       }
 
       // Create order record
+      const orderData = {
+        customer_id: customer.id,
+        total_amount: finalTotal,
+        status: 'pending',
+        payment_status: 'pending'
+      };
+
       const { data: order, error: orderError } = await supabase
         .from('orders')
-        .insert({
-          customer_id: customer.id,
-          total_amount: finalTotal,
-          status: 'pending',
-          payment_status: 'pending'
-        })
-        .select('*')
+        .insert([orderData])
+        .select()
         .single();
 
       if (orderError) {
@@ -82,7 +86,7 @@ const CheckoutPage: React.FC = () => {
       const { error: itemsError } = await supabase
         .from('order_items')
         .insert(orderItems)
-        .select('*');
+        .select();
 
       if (itemsError) {
         console.error('Order items creation error:', itemsError);
