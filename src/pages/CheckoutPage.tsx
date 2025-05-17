@@ -7,7 +7,7 @@ import { supabase } from '../lib/supabase';
 
 const CheckoutPage: React.FC = () => {
   const [step, setStep] = useState<'shipping' | 'payment'>('shipping');
-  const { cart, cartTotal, clearCart } = useCart();
+  const { cart, cartTotal } = useCart();
   const navigate = useNavigate();
   const deliveryCost = 20;
   const finalTotal = cartTotal + deliveryCost;
@@ -85,14 +85,14 @@ const CheckoutPage: React.FC = () => {
 
       const { error: itemsError } = await supabase
         .from('order_items')
-        .insert(orderItems)
-        .select();
+        .insert(orderItems);
 
       if (itemsError) {
         console.error('Order items creation error:', itemsError);
         throw new Error('Failed to create order items');
       }
 
+      // If everything is successful, move to payment step
       setStep('payment');
     } catch (error) {
       console.error('Error saving order:', error);
@@ -100,7 +100,7 @@ const CheckoutPage: React.FC = () => {
     }
   };
 
-  const handlePaymentSubmit = async (method: 'ideal' | 'creditcard') => {
+  const handlePaymentSubmit = async (method: 'ideal') => {
     try {
       const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/create-payment`, {
         method: 'POST',
