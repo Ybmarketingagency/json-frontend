@@ -12,10 +12,6 @@ const ShippingForm: React.FC<ShippingFormProps> = ({ onSubmit }) => {
   const { register, handleSubmit, formState: { errors } } = useForm();
   const { cartTotal } = useCart();
 
-  const onFormSubmit = (data: any) => {
-    onSubmit(data);
-  };
-
   return (
     <div className="bg-white rounded-lg shadow-sm p-8">
       <div className="mb-8">
@@ -27,7 +23,7 @@ const ShippingForm: React.FC<ShippingFormProps> = ({ onSubmit }) => {
 
       <h1 className="text-2xl font-semibold mb-6">Verzendgegevens</h1>
 
-      <form onSubmit={handleSubmit(onFormSubmit)} className="space-y-6">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
