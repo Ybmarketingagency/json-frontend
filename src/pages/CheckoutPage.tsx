@@ -17,7 +17,7 @@ const CheckoutPage: React.FC = () => {
       // Create customer record
       const { data: customer, error: customerError } = await supabase
         .from('customers')
-        .insert([{
+        .insert({
           first_name: data.firstName,
           last_name: data.lastName,
           email: data.email,
@@ -28,8 +28,8 @@ const CheckoutPage: React.FC = () => {
           postal_code: data.postalCode,
           city: data.city,
           phone: data.phone
-        }])
-        .select()
+        })
+        .select('*')
         .single();
 
       if (customerError) {
@@ -44,13 +44,13 @@ const CheckoutPage: React.FC = () => {
       // Create order record
       const { data: order, error: orderError } = await supabase
         .from('orders')
-        .insert([{
+        .insert({
           customer_id: customer.id,
           total_amount: finalTotal,
           status: 'pending',
           payment_status: 'pending'
-        }])
-        .select()
+        })
+        .select('*')
         .single();
 
       if (orderError) {
@@ -81,7 +81,8 @@ const CheckoutPage: React.FC = () => {
 
       const { error: itemsError } = await supabase
         .from('order_items')
-        .insert(orderItems);
+        .insert(orderItems)
+        .select('*');
 
       if (itemsError) {
         console.error('Order items creation error:', itemsError);
