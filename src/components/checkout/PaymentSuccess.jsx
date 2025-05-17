@@ -1,14 +1,30 @@
 import React, { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useCart } from '../../context/CartContext';
+import { supabase } from '../../lib/supabase';
 
 const PaymentSuccess = () => {
   const navigate = useNavigate();
   const { clearCart } = useCart();
+  const [searchParams] = useSearchParams();
+  const orderId = searchParams.get('orderId');
 
   useEffect(() => {
+    const updateOrderStatus = async () => {
+      if (orderId) {
+        await supabase
+          .from('orders')
+          .update({ 
+            payment_status: 'paid',
+            status: 'processing'
+          })
+          .eq('id', orderId);
+      }
+    };
+
+    updateOrderStatus();
     clearCart();
-  }, []);
+  }, [orderId]);
 
   return (
     <div className="bg-white rounded-lg shadow-sm p-8 flex flex-col justify-center items-center h-full pt-72">
@@ -28,4 +44,3 @@ const PaymentSuccess = () => {
 };
 
 export default PaymentSuccess;
-

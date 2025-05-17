@@ -11,6 +11,7 @@ const CheckoutPage: React.FC = () => {
   const navigate = useNavigate();
   const deliveryCost = 20;
   const finalTotal = cartTotal + deliveryCost;
+  const [orderId, setOrderId] = useState<string | null>(null);
   
   const handleShippingSubmit = async (data: any) => {
     try {
@@ -48,6 +49,9 @@ const CheckoutPage: React.FC = () => {
 
       if (orderError) throw orderError;
 
+      // Store order ID for payment update
+      setOrderId(orderData.id);
+
       // Create order items
       const orderItems = cart.map(item => ({
         order_id: orderData.id,
@@ -79,7 +83,7 @@ const CheckoutPage: React.FC = () => {
     }
   };
 
-  const handlePaymentSubmit = async (method: 'ideal' | 'creditcard') => {
+  const handlePaymentSubmit = async (method: 'ideal') => {
     try {
       const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/create-payment`, {
         method: 'POST',
@@ -87,13 +91,22 @@ const CheckoutPage: React.FC = () => {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          method, 
-          items: cart
+          method,
+          items: cart,
+          orderId // Pass orderId to backend
         })
       });
 
       const result = await response.json();
       if (!response.ok) throw new Error(result.message || 'Payment failed.');
+
+      // Update order payment status to 'processing'
+      if (orderId) {
+        await supabase
+          .from('orders')
+          .update({ payment_status: 'processing' })
+          .eq('id', orderId);
+      }
 
       window.location.href = result.paymentUrl;
     } catch (error) {
