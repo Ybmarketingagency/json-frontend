@@ -15,9 +15,9 @@ const CheckoutPage: React.FC = () => {
   const handleShippingSubmit = async (data: any) => {
     try {
       // Create customer record
-      const { data: customerData, error: customerError } = await supabase
+      const { data: customer, error: customerError } = await supabase
         .from('customers')
-        .insert({
+        .insert([{
           first_name: data.firstName,
           last_name: data.lastName,
           email: data.email,
@@ -28,29 +28,43 @@ const CheckoutPage: React.FC = () => {
           postal_code: data.postalCode,
           city: data.city,
           phone: data.phone
-        })
+        }])
         .select()
         .single();
 
-      if (customerError) throw customerError;
+      if (customerError) {
+        console.error('Customer creation error:', customerError);
+        throw new Error('Failed to create customer record');
+      }
+
+      if (!customer) {
+        throw new Error('No customer data returned');
+      }
 
       // Create order record
-      const { data: orderData, error: orderError } = await supabase
+      const { data: order, error: orderError } = await supabase
         .from('orders')
-        .insert({
-          customer_id: customerData.id,
+        .insert([{
+          customer_id: customer.id,
           total_amount: finalTotal,
           status: 'pending',
           payment_status: 'pending'
-        })
+        }])
         .select()
         .single();
 
-      if (orderError) throw orderError;
+      if (orderError) {
+        console.error('Order creation error:', orderError);
+        throw new Error('Failed to create order record');
+      }
+
+      if (!order) {
+        throw new Error('No order data returned');
+      }
 
       // Create order items
       const orderItems = cart.map(item => ({
-        order_id: orderData.id,
+        order_id: order.id,
         shape_name: item.shape.name,
         a: item.width,
         b: item.height,
@@ -69,7 +83,10 @@ const CheckoutPage: React.FC = () => {
         .from('order_items')
         .insert(orderItems);
 
-      if (itemsError) throw itemsError;
+      if (itemsError) {
+        console.error('Order items creation error:', itemsError);
+        throw new Error('Failed to create order items');
+      }
 
       setStep('payment');
     } catch (error) {
